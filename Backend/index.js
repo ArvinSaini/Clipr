@@ -11,8 +11,10 @@ const app=express();
 const PORT = process.env.PORT ;
 
 // connection
-connectToMongoDB(process.env.atlas_URL)
-.then(() => console.log('Mongodb connected!'));
+connectToMongoDB(process.env.ATLAS_URL)
+  .then(() => console.log(' MongoDB connected successfully!'))
+  .catch((err) => console.error(' MongoDB connection failed:', err.message));
+
 
 // middleware
 app.use(express.json());
