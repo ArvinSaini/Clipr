@@ -10,7 +10,7 @@
   const notice = document.getElementById('notice');
   const clickCount = document.getElementById('click-count');
 
-  const BACKEND_BASE = 'http://localhost:8001';
+  const BACKEND_BASE = 'https://url-shortener-10es.onrender.com';
 
   function showMessage(text, isError){
     message.textContent = text || '';
