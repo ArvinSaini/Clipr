@@ -23,17 +23,22 @@ app.use(cors());
 // routes
 app.use("/url",urlRoute);
 
-app.get('/:shortId', async (req,res)=>{
+app.get('/:shortId', async (req, res) => {
     const shortId = req.params.shortId;
- const entry =   await URL.findOneAndUpdate({  // entry is original url
-        shortId
-    },{$push:{  // update
-        visitedHistory : {
-            timestamp: Date.now(),
-        },
-    },
-})
-res.redirect(entry.redirectedURL);
+
+    // push the visit (timestamp + ip) and return the updated document
+    const entry = await URL.findOneAndUpdate(
+        { shortId },
+        { $push: { visitedHistory: { timestamp: Date.now(), ip: req.ip } } },
+        { new: true }
+    );
+
+    // If no document was found, respond 404 instead of crashing
+    if (!entry) {
+        return res.status(404).send('Short link not found');
+    }
+
+    return res.redirect(entry.redirectedURL);
 });
 
 
