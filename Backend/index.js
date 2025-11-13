@@ -19,6 +19,29 @@ connectToMongoDB(process.env.ATLAS_URL)
 // middleware
 app.use(express.json());
 app.use(cors());
+// helper to get client IP (prefer X-Forwarded-For if present), and normalize
+function getClientIp(req) {
+    // prefer X-Forwarded-For header (may contain a list)
+    const xff = req.headers && (req.headers['x-forwarded-for'] || req.headers['X-Forwarded-For']);
+    let ip = null;
+    if (xff) {
+        // left-most value is the original client
+        ip = String(xff).split(',')[0].trim();
+    } else if (req.ip) {
+        ip = req.ip;
+    } else if (req.connection && req.connection.remoteAddress) {
+        ip = req.connection.remoteAddress;
+    }
+
+    if (!ip) return null;
+
+    // Normalize IPv6 loopback and IPv4-mapped IPv6 addresses to plain IPv4
+    if (ip === '::1') return '127.0.0.1';
+    const m = ip.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i);
+    if (m) return m[1];
+
+    return ip;
+}
  
 // routes
 app.use("/url",urlRoute);
@@ -26,10 +49,11 @@ app.use("/url",urlRoute);
 app.get('/:shortId', async (req, res) => {
     const shortId = req.params.shortId;
 
-    // push the visit (timestamp + ip) and return the updated document
+    // push the visit (timestamp + normalized ipv4) and return the updated document
+    const clientIp = getClientIp(req);
     const entry = await URL.findOneAndUpdate(
         { shortId },
-        { $push: { visitedHistory: { timestamp: Date.now(), ip: req.ip } } },
+        { $push: { visitedHistory: { timestamp: Date.now(), ip: clientIp } } },
         { new: true }
     );
 
