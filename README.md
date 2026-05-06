@@ -16,7 +16,6 @@ Clipr is a fast URL shortener with real-time click analytics, duplicate detectio
 - 🔗 **Shorten any URL** — instantly generates a short link
 - 📊 **Click Analytics** — tracks total clicks per short URL
 - ♻️ **Duplicate Detection** — returns existing short link for already-shortened URLs
-- 🌐 **IP Tracking** — logs visitor IPs per click
 - 🎨 **Animated Cloud UI** — powered by Vanta.js + Three.js
 - 📱 **Fully Responsive** — works on all screen sizes
 
