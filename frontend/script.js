@@ -14,7 +14,7 @@
 
   function showMessage(text, isError){
     message.textContent = text || '';
-    message.style.color = isError ? 'crimson' : '';
+    message.className = isError ? 'error' : (text ? 'success' : '');
   }
 
   async function fetchAnalytics(shortId) {
