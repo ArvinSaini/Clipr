@@ -1,20 +1,22 @@
 {
-  "name": "7_shorturl_project",
+  "name": "clipr",
   "version": "1.0.0",
+  "description": "Clipr — A URL shortener with click analytics",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "author": "",
+  "author": "Arvin Saini",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mongoose": "^8.19.3",
-    "nanoid": "^3.3.11",
+    "nanoid": "^3.3.11"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.11"
   }
 }
