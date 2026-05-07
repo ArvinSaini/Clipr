@@ -62,7 +62,8 @@
         throw new Error('Unexpected response from server');
       }
 
-      const final = `${BACKEND_BASE}/${data.id}`;
+      const base = BACKEND_BASE || window.location.origin;
+      const final = `${base}/${data.id}`;
       shortLink.href = final;
       shortLink.textContent = final;
 
