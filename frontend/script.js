@@ -1,5 +1,5 @@
-// Basic frontend logic to call POST /url on the backend at http://localhost:8001
-(function(){
+// Frontend logic — API calls use same-origin (proxied by Vercel to Render backend)
+(function () {
   const form = document.getElementById('shorten-form');
   const input = document.getElementById('url-input');
   const resultSection = document.getElementById('result');
@@ -10,9 +10,9 @@
   const notice = document.getElementById('notice');
   const clickCount = document.getElementById('click-count');
 
-  const BACKEND_BASE = 'https://url-shortener-imrp.onrender.com';
+  const BACKEND_BASE = '';
 
-  function showMessage(text, isError){
+  function showMessage(text, isError) {
     message.textContent = text || '';
     message.className = isError ? 'error' : (text ? 'success' : '');
   }
@@ -31,68 +31,68 @@
     }
   }
 
-  form.addEventListener('submit', async (e)=>{
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     resultSection.classList.add('hidden');
     notice.textContent = '';
     showMessage('');
 
     const url = input.value.trim();
-    if(!url){
+    if (!url) {
       showMessage('Please enter a valid URL', true);
       return;
     }
 
     showMessage('Shortening...');
 
-    try{
+    try {
       const res = await fetch(`${BACKEND_BASE}/url`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({url}),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
       });
 
-      if(!res.ok){
-        const err = await res.json().catch(()=>({error: res.statusText}));
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.statusText }));
         throw new Error(err && err.error ? err.error : res.statusText || 'Request failed');
       }
 
       const data = await res.json();
-      if(!data.id){
+      if (!data.id) {
         throw new Error('Unexpected response from server');
       }
 
       const final = `${BACKEND_BASE}/${data.id}`;
       shortLink.href = final;
       shortLink.textContent = final;
-      
+
       // Fetch and display analytics
       await fetchAnalytics(data.id);
-      
+
       resultSection.classList.remove('hidden');
       notice.textContent = 'Click Open to visit the short URL or Copy to copy it to clipboard.';
       showMessage('Shortened successfully');
-    }catch(err){
+    } catch (err) {
       showMessage('Error: ' + err.message, true);
     }
   });
 
-  copyBtn.addEventListener('click', async ()=>{
+  copyBtn.addEventListener('click', async () => {
     const url = shortLink.href;
-    try{
+    try {
       await navigator.clipboard.writeText(url);
       showMessage('Copied to clipboard');
-    }catch(_){
+    } catch (_) {
       // fallback
       const ta = document.createElement('textarea');
       ta.value = url; document.body.appendChild(ta); ta.select();
-      try{document.execCommand('copy'); showMessage('Copied to clipboard');}catch(e){showMessage('Copy failed', true);} finally{ta.remove();}
+      try { document.execCommand('copy'); showMessage('Copied to clipboard'); } catch (e) { showMessage('Copy failed', true); } finally { ta.remove(); }
     }
   });
 
-  openBtn.addEventListener('click', ()=>{
+  openBtn.addEventListener('click', () => {
     const url = shortLink.href;
-    if(!url || url === '#') return;
+    if (!url || url === '#') return;
     window.open(url, '_blank', 'noopener');
   });
 

@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/url/:path*",
+      "destination": "https://url-shortener-imrp.onrender.com/url/:path*"
+    },
+    {
+      "source": "/:shortId",
+      "destination": "https://url-shortener-imrp.onrender.com/:shortId"
+    }
+  ]
+}
