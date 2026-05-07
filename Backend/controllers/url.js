@@ -22,7 +22,7 @@ async function handleGenerateShortURL(req, res) {
     // atomic upsert: if URL exists, return existing shortId; otherwise create new one
     const doc = await URL.findOneAndUpdate(
         { redirectedURL: original },
-        { $setOnInsert: { shortId: nanoid(6), redirectedURL: original, visitedHistory: [] } },
+        { $setOnInsert: { shortId: nanoid(5), redirectedURL: original, visitedHistory: [] } },
         { upsert: true, new: true }
     );
 

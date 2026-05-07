@@ -62,7 +62,7 @@
         throw new Error('Unexpected response from server');
       }
 
-      const base = BACKEND_BASE || window.location.origin;
+      const base = 'https://clipr.arvinsaini.tech';
       const final = `${base}/${data.id}`;
       shortLink.href = final;
       shortLink.textContent = final;
